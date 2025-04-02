@@ -1,0 +1,1 @@
+{"root":["./src/app.ts","./src/server.ts","./src/config/db.ts","./src/controllers/user.controller.ts","./src/middlewares/errorhandler.ts","./src/models/transaction.models.ts","./src/models/user.models.ts","./src/models/wallet.models.ts","./src/routes/user.routes.ts","./src/types/signup.ts","./src/utils/gettransactionhistory.ts"],"version":"5.7.2"}
