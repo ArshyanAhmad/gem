@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Wallet } from "../models/wallet.models";
 import { User } from "../models/user.models";
+import mongoose from "mongoose";
 
 // Wallet Balance	        /api/wallet/balance/:userId	        GET	    Get user wallet balance
 // Add Money	            /api/wallet/add	                    POST	Add money to wallet
@@ -55,14 +56,98 @@ export const addMoney = async (req: Request, res: Response, next: NextFunction):
 }
 
 
+// user 1 = sadjldkfnmdsfjiodsflsdf;
+// user 2 = dfjdl;fmdskjfldsfmdsfsdf;
+
+// userSchema = {
+//     name,
+//     email,
+//     phone,
+//     password,
+//     wallet : mongoose Object
+// }
+
+// walletSchema = {
+//     userId,
+//     balance,
+//     transactions : mongoose Object
+// }
+
+
 export const transferMoney = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
     const { phone, amount } = req.body;
 
     try {
+        const userId = req.userId;
 
-    } catch (error) {
+        const sender = await User.findById(userId)
+        const receiver = await User.findOne({ phone });
 
+        if (!receiver) {
+            await session.abortTransaction();
+            res.json({
+                error: "Invalid phone no, user doesn't exists"
+            })
+            return;
+        }
+
+        const isMatch = sender?.phone === phone;
+        if (isMatch) {
+            await session.abortTransaction();
+            res.json({
+                error: "Phone number cannot be the same as the sender's"
+            })
+            return;
+        }
+
+        const senderAccount = await Wallet.findOne({ userId: req.userId }).session(session);
+
+        if (!senderAccount || senderAccount?.balance < amount) {
+            await session.abortTransaction();
+            res.status(400).json({
+                message: "Insufficient balance",
+            });
+            return;
+        }
+
+        const receiverAccount = await Wallet.findOne({ userId: receiver?._id }).session(session);
+
+        if (!receiverAccount) {
+            await session.abortTransaction();
+            res.json({
+                error: "Receiver wallet not found"
+            })
+            return;
+        }
+
+        await Wallet.updateOne(
+            { userId: req.userId },
+            { $inc: { balance: -amount } }
+        ).session(session);
+
+        await Wallet.updateOne(
+            { userId: receiver._id },
+            { $inc: { balance: amount } }
+        ).session(session);
+
+        await session.commitTransaction();
+
+        res.json({
+            message: "Money transfer successfull",
+        })
+        return;
+
+    } catch (error: any) {
+        await session.abortTransaction();
+        console.error("Money transfer failed!", error.message);
+        res.json({
+            error: "Internal server error"
+        })
+        return;
     }
 }
 
@@ -70,7 +155,8 @@ export const transferMoney = async (req: Request, res: Response, next: NextFunct
 export const getUserBalance = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     try {
-        const userId = req.userId;
+        const userId = req.query?.userId;
+
         if (!userId) {
             res.status(400).json({ error: "User ID is missing in request" });
             return;
