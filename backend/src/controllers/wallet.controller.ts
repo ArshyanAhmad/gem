@@ -2,14 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Wallet } from "../models/wallet.models";
 import { User } from "../models/user.models";
 import mongoose from "mongoose";
-
-// Wallet Balance	        /api/wallet/balance/:userId	        GET	    Get user wallet balance
-// Add Money	            /api/wallet/add	                    POST	Add money to wallet
-// Withdraw Money	        /api/wallet/withdraw	            POST	Withdraw money to bank
-// Send Money	            /api/wallet/transfer	            POST	Transfer money to another user
-// Transaction History	    /api/wallet/transactions/:userId	GET   	Get user's transaction history
-
-
+import { Transaction } from "../models/transaction.models";
 
 export const addMoney = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
@@ -56,24 +49,6 @@ export const addMoney = async (req: Request, res: Response, next: NextFunction):
 }
 
 
-// user 1 = sadjldkfnmdsfjiodsflsdf;
-// user 2 = dfjdl;fmdskjfldsfmdsfsdf;
-
-// userSchema = {
-//     name,
-//     email,
-//     phone,
-//     password,
-//     wallet : mongoose Object
-// }
-
-// walletSchema = {
-//     userId,
-//     balance,
-//     transactions : mongoose Object
-// }
-
-
 export const transferMoney = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     const session = await mongoose.startSession();
@@ -98,6 +73,18 @@ export const transferMoney = async (req: Request, res: Response, next: NextFunct
         const isMatch = sender?.phone === phone;
         if (isMatch) {
             await session.abortTransaction();
+
+            Transaction.create({
+                sender: userId,
+                senderPhone: sender?.phone,
+                receiver: receiver._id,
+                receiverPhone: receiver?.phone,
+                amount: 0,
+                status: "Failed",
+                transactionType: "Send",
+                createdAt: Date.now()
+            })
+
             res.json({
                 error: "Phone number cannot be the same as the sender's"
             })
@@ -108,6 +95,18 @@ export const transferMoney = async (req: Request, res: Response, next: NextFunct
 
         if (!senderAccount || senderAccount?.balance < amount) {
             await session.abortTransaction();
+
+            Transaction.create({
+                sender: userId,
+                senderPhone: sender?.phone,
+                receiver: receiver._id,
+                receiverPhone: receiver?.phone,
+                amount: 0,
+                status: "Failed",
+                transactionType: "Send",
+                createdAt: Date.now()
+            })
+
             res.status(400).json({
                 message: "Insufficient balance",
             });
@@ -136,6 +135,17 @@ export const transferMoney = async (req: Request, res: Response, next: NextFunct
 
         await session.commitTransaction();
 
+        await Transaction.create({
+            sender: userId,
+            senderPhone: sender?.phone,
+            receiver: receiver._id,
+            receiverPhone: receiver?.phone,
+            amount,
+            status: "Success",
+            transactionType: "Send",
+            createdAt: Date.now()
+        })
+
         res.json({
             message: "Money transfer successfull",
         })
@@ -151,11 +161,10 @@ export const transferMoney = async (req: Request, res: Response, next: NextFunct
     }
 }
 
-
 export const getUserBalance = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     try {
-        const userId = req.query?.userId;
+        const userId = req.params?.userId;
 
         if (!userId) {
             res.status(400).json({ error: "User ID is missing in request" });
@@ -188,6 +197,31 @@ export const getUserBalance = async (req: Request, res: Response, next: NextFunc
     } catch (error: any) {
         console.error("Error fetching user wallet:", error.message);
         res.status(500).json({ error: "Internal server error" });
+        return;
+    }
+}
+
+
+
+export const getTransactionsHistory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const userId = req.params.userId;
+
+        const transactions = await Transaction.find({
+            $or: [{ sender: userId }, { receiver: userId }],
+        }).sort({ createdAt: -1 });
+
+        res.json({
+            transactions
+        })
+        return;
+
+    } catch (error: any) {
+        console.error("Error while getting transaction history", error.message);
+
+        res.status(500).json({
+            error: "Internal server error"
+        })
         return;
     }
 }
