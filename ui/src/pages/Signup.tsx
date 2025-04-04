@@ -1,7 +1,7 @@
 import InputElement from "../components/InputElement"
+import HeadingText from "../components/HeadingText"
 import VenmoLogo from "../components/VenmoLogo"
 import Button from "../components/Button"
-import HeadingText from "../components/HeadingText"
 import { Link } from "react-router-dom"
 
 export default function Signup() {

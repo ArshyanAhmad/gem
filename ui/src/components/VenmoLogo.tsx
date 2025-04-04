@@ -1,8 +1,9 @@
+import venmoLogo from "../assets/logo.svg"
 
 export default function VenmoLogo() {
     return (
-        <div className="w-28">
-            <img className="w-fit" src="https://account.venmo.com/static/images/logo.svg" alt="Venmo Logo" />
+        <div className="w-28 h-full">
+            <img className="w-fit h-full" src={venmoLogo} alt="Venmo Logo" />
         </div>
     );
 }

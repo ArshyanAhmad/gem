@@ -1,10 +1,44 @@
 import InputElement from "../components/InputElement"
-import VenmoLogo from "../components/VenmoLogo"
-import Button from "../components/Button"
 import HeadingText from "../components/HeadingText"
+import VenmoLogo from "../components/VenmoLogo"
+import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import Button from "../components/Button"
+
 import { Link } from "react-router-dom"
+import Cookies from "js-cookie"
+import axios from "axios"
+
 
 export default function Signin() {
+
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const signInHandler = async () => {
+        try {
+            const res = await axios.post("http://localhost:8000/api/user/signin", {
+                email,
+                password,
+            });
+
+            const token = res.data?.token;
+            Cookies.set("authToken", token, { expires: 1, secure: true, sameSite: "Strict" });
+
+            navigate("/");
+
+        } catch (error) {
+            console.error("Error signing in:", error);
+        }
+    };
+
+
+    useEffect(() => {
+        signInHandler()
+    }, [])
+
     return (
         <div className="w-screen flex items-center justify-center h-screen">
 
@@ -16,11 +50,12 @@ export default function Signin() {
 
                     <HeadingText text="Log in" />
 
-                    <div className="mb-5 w-full">
-                        <InputElement type={"text"} placeholder={"Enter email or phone"} />
+                    <div className="mb-5 flex flex-col gap-3 w-full">
+                        <InputElement setter={setEmail} value={email} type={"text"} placeholder={"Enter email or phone"} />
+                        <InputElement value={password} setter={setPassword} type={"password"} placeholder={"password"} />
                     </div>
 
-                    <Button text="Next" bgColor={"bg-blue-700"} textColor="text-white" />
+                    <Button onClick={signInHandler} text="Log in" bgColor={"bg-blue-700"} textColor="text-white" />
 
                     <Link to={"/signup"} className="w-full">
                         <Button text="Sign up" bgColor={"bg-blue-0"} textColor="text-blue-700" />
@@ -28,6 +63,7 @@ export default function Signin() {
 
                 </div>
             </div>
+
         </div>
     )
 }

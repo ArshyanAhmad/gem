@@ -1,8 +1,8 @@
 import { SignUpInput, SignInInput } from "../types/signup";
-import { User } from "../models/user.models";
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import { Wallet } from "../models/wallet.models";
+import { User } from "../models/user.models";
+import jwt from "jsonwebtoken";
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -102,3 +102,12 @@ export const Login = async (req: Request, res: Response, next: NextFunction): Pr
     }
 
 }
+
+
+export const Logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        // const userId = req.userId;
+    } catch (error) {
+
+    }
+}  
