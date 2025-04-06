@@ -1,17 +1,28 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import VenmoLogo from "./VenmoLogo";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 export default function Header() {
-    return <div className="flex w-full p-5 item-center justify-between  bg-gray-200/30  ">
-        <div>
-            <VenmoLogo />
-        </div>
+    const navigate = useNavigate();
 
-        <div>
-            <Link to={"/signin"}>
-                <button className="bg-blue-600 rounded-2xl px-4 h-8 text-white cursor-pointer hover:bg-blue-700 ">Logout</button>
-            </Link>
-        </div>
+    function logoutHandler() {
+        Cookies.remove("authToken");
+        Cookies.remove("userData");
 
-    </div >;
+        toast.error("User logout successfully!", { id: "logout-warning" });
+        navigate("/signin");
+    }
+
+    return (
+        <div className="flex w-full p-5 item-center justify-between  bg-gray-200/30  ">
+            <div>
+                <VenmoLogo />
+            </div>
+
+            <div>
+                <button onClick={logoutHandler} className="bg-blue-600 rounded-4xl px-4 h-9 text-white cursor-pointer hover:bg-blue-700 ">Logout</button>
+            </div>
+        </div>
+    );
 }

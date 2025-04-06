@@ -5,39 +5,62 @@ import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import Button from "../components/Button"
 
+import toast from "react-hot-toast"
+
+import { SITE_NAME } from "../config/helper"
 import { Link } from "react-router-dom"
 import Cookies from "js-cookie"
 import axios from "axios"
+import { useLocation } from "react-router-dom"
 
 
 export default function Signin() {
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        Cookies.remove("authToken");
+        Cookies.remove("userData");
+        navigate("/signin")
+    }, [location.pathname]);
+
+
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+
     const signInHandler = async () => {
+        if (email === "" || password === "") {
+            toast.error("Fill up all inputs form");
+            return;
+        }
+
         try {
-            const res = await axios.post("http://localhost:8000/api/user/signin", {
+            const res = await axios.post(`${SITE_NAME}/api/user/signin`, {
                 email,
                 password,
             });
 
             const token = res.data?.token;
-            Cookies.set("authToken", token, { expires: 1, secure: true, sameSite: "Strict" });
+            const userData = res.data?.userData;
 
+            console.log("userData", userData);
+
+
+            Cookies.set("authToken", `Bearer ${token}`, { expires: 1, secure: true, sameSite: "Strict" });
+            Cookies.set("userData", JSON.stringify(userData), { expires: 1, secure: true, sameSite: "Strict" });
+
+            toast.success("Login successfully!");
             navigate("/");
 
         } catch (error) {
             console.error("Error signing in:", error);
+            toast.error("Sign in failed. Please try again.");
         }
     };
 
-
-    useEffect(() => {
-        signInHandler()
-    }, [])
 
     return (
         <div className="w-screen flex items-center justify-center h-screen">
