@@ -91,7 +91,12 @@ export const Login = async (req: Request, res: Response, next: NextFunction): Pr
 
         res.setHeader("Authorization", `Bearer ${token}`)
 
-        res.status(200).json({ token });
+        const userData = {
+            username: user.name,
+            userId: user._id
+        }
+
+        res.status(200).json({ token, userData });
 
     } catch (error: any) {
         console.error("Error while login", error.message);
