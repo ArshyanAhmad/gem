@@ -44,7 +44,11 @@ export default function Signup() {
             })
 
             const token = res.data?.token;
+            const userData = res.data?.userData;
+
             Cookies.set("authToken", `Bearer ${token}`, { expires: 1, secure: true, sameSite: "Strict" })
+            Cookies.set("userData", JSON.stringify(userData), { expires: 1, secure: true, sameSite: "Strict" });
+
             toast.success("Sign up successfully!");
 
             navigate("/");

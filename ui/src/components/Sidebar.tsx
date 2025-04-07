@@ -27,7 +27,7 @@ export default function Sidebar() {
                 <ul>
                     <Link
                         className="flex items-center gap-2 text-slate-600 hover:text-violet-950/90 ease-in-out"
-                        to={"/portfolio"}
+                        to={"/deposit"}
                     >
                         <HiDownload className="text-3xl" />
                         <span className="text-xl font-semibold">Deposit</span>
