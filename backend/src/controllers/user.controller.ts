@@ -26,10 +26,12 @@ export const register = async (req: Request, res: Response, next: NextFunction):
         const user = await User.create({ name, email, password, phone });
 
         const amount = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000;
+        console.log(amount);
+
 
         await Wallet.create({
             userId: user._id,
-            balance: 9000
+            balance: amount
         })
 
         const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY!, { expiresIn: "7d" });
@@ -43,7 +45,12 @@ export const register = async (req: Request, res: Response, next: NextFunction):
 
         res.setHeader("Authorization", `Bearer ${token}`)
 
-        res.status(201).json({ token });
+        const userData = {
+            username: user.name,
+            userId: user._id
+        }
+
+        res.status(201).json({ token, userData });
     } catch (error) {
         next(error);
     }
@@ -109,10 +116,11 @@ export const Login = async (req: Request, res: Response, next: NextFunction): Pr
 }
 
 
-export const Logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const searchByName = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        // const userId = req.userId;
+
     } catch (error) {
 
     }
-}  
+}
+
