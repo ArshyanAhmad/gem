@@ -26,8 +26,6 @@ export const register = async (req: Request, res: Response, next: NextFunction):
         const user = await User.create({ name, email, password, phone });
 
         const amount = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000;
-        console.log(amount);
-
 
         await Wallet.create({
             userId: user._id,
@@ -52,7 +50,7 @@ export const register = async (req: Request, res: Response, next: NextFunction):
 
         res.status(201).json({ token, userData });
     } catch (error) {
-        next(error);
+        next(error)
     }
 };
 
@@ -118,9 +116,27 @@ export const Login = async (req: Request, res: Response, next: NextFunction): Pr
 
 export const searchByName = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+        const nameQuery = req.body.name;
 
+        const users = await User.find({
+            name: { $regex: nameQuery, $options: "i" },
+            _id: { $ne: req?.userId }
+        }).select("-password");
+
+        if (!users) {
+            res.json({
+                errror: "User not found with this name"
+            })
+            return;
+        }
+
+        res.json(users);
+        return;
     } catch (error) {
-
+        console.error("Error while search user: ", error);
+        res.json({
+            error: "Internal server error"
+        })
+        return;
     }
 }
-

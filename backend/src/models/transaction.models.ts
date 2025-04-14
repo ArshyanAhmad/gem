@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-// Define the Transaction interface
+
 interface ITransaction extends Document {
     sender: mongoose.Schema.Types.ObjectId;
     senderPhone: string;
@@ -12,7 +12,6 @@ interface ITransaction extends Document {
     createdAt: Date;
 }
 
-// Define the schema
 const transactionSchema = new Schema<ITransaction>({
     sender: {
         type: mongoose.Schema.Types.ObjectId,
