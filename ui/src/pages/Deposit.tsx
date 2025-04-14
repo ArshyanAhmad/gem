@@ -1,13 +1,13 @@
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import { CiUser } from "react-icons/ci";
 import InputElement from "../components/InputElement";
-import Button from "../components/Button";
-import Cookies from "js-cookie";
-import axios from "axios";
 import { SITE_NAME } from "../config/helper";
+import Sidebar from "../components/Sidebar";
+import Button from "../components/Button";
+import Header from "../components/Header";
+import { CiUser } from "react-icons/ci";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 export default function Deposit() {
     const [amount, setAmount] = useState("");

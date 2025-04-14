@@ -15,7 +15,7 @@ export default function IconComponent() {
         </div>
 
         <div className="p-2 flex items-center justify-center flex-col gap-2 ">
-            <Link to={"/transfer-money"}>
+            <Link to={"/transfer"}>
                 <div className="cursor-pointer hover:bg-blue-600 text-3xl text-white w-14 h-14 flex items-center justify-center rounded-full bg-blue-500">
                     <HiArrowSmUp className="text-4xl" />
                 </div>

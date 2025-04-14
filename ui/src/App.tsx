@@ -8,6 +8,7 @@ import Deposit from "./pages/Deposit";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Home from "./pages/Home";
+import TransferMoney from "./pages/TransferMoney";
 
 function App() {
 
@@ -28,8 +29,10 @@ function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/deposit" element={<Deposit />} />
         <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/transfer-money" element={<Transfer />} />
+        <Route path="/transfer" element={<Transfer />} />
+        <Route path="/transfer-money" element={<TransferMoney />} />
         <Route path="/all-transactions" element={<Transactions />} />
+        <Route path="*" element={<h1> Page Not Found </h1>} />
       </Routes>
     </>
   );

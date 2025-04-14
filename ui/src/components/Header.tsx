@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import VenmoLogo from "./VenmoLogo";
-import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 export default function Header() {
     const navigate = useNavigate();
@@ -21,7 +21,12 @@ export default function Header() {
             </div>
 
             <div>
-                <button onClick={logoutHandler} className="bg-blue-600 rounded-4xl px-4 h-9 text-white cursor-pointer hover:bg-blue-700 ">Logout</button>
+                <button
+                    onClick={logoutHandler}
+                    className="bg-blue-600 rounded-4xl px-4 h-9 text-white cursor-pointer hover:bg-blue-700 "
+                >
+                    Logout
+                </button>
             </div>
         </div>
     );

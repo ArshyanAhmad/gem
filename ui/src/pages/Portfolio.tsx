@@ -1,4 +1,4 @@
-import { HiArrowSmDown, HiArrowSmUp } from "react-icons/hi";
+import IconComponent from "../components/IconComponent";
 import { SITE_NAME } from "../config/helper";
 import Sidebar from "../components/Sidebar";
 import { useEffect, useState } from "react";
@@ -6,8 +6,6 @@ import Header from "../components/Header";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import IconComponent from "../components/IconComponent";
 
 export default function Portfolio() {
     const [userBalance, setUserBalance] = useState<number>(0);
@@ -59,7 +57,12 @@ export default function Portfolio() {
                             </span>
                             <h4 className="text-5xl text-neutral-600 py-4 pl-2 font-bold">
                                 <span className="text-slate-400 pr-1">$</span>
-                                {userBalance ? userBalance : "0.00"}
+                                {userBalance
+                                    ? Number(userBalance).toLocaleString("en-US", {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })
+                                    : "0.00"}
                             </h4>
                         </div>
 

@@ -1,11 +1,11 @@
-import Sidebar from "../components/Sidebar";
+import IconComponent from "../components/IconComponent";
 import { SITE_NAME } from "../config/helper";
+import { useEffect, useState } from "react";
+import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
-import IconComponent from "../components/IconComponent";
 
 function getTimeBasedGreeting(): string {
     const hour = new Date().getHours();
@@ -31,7 +31,8 @@ export default function Home() {
     if (userData) {
         const user = JSON.parse(userData);
         username = user?.username;
-        username = username.charAt(0).toUpperCase() + username.slice(1).toLowerCase();
+        username =
+            username.charAt(0).toUpperCase() + username.slice(1).toLowerCase();
     }
 
     const fetchWalletData = async () => {
@@ -52,7 +53,6 @@ export default function Home() {
 
             const userBalance = res.data?.balance;
             setUserBalance(userBalance);
-
         } catch (error: any) {
             const errorMessage =
                 error.response?.data?.error || "Unexpected error occurred";
@@ -88,7 +88,14 @@ export default function Home() {
                             </span>
                             <h4 className="text-5xl text-neutral-600 py-4 pl-2 font-bold">
                                 <span className="text-slate-400 pr-1">$</span>
-                                {userBalance ? userBalance : "0.00"}
+
+                                {/* {userBalance ? Number(userBalance).toFixed(2) : "0.00"} */}
+                                {userBalance
+                                    ? Number(userBalance).toLocaleString("en-US", {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })
+                                    : "0.00"}
                             </h4>
                         </div>
 

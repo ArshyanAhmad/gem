@@ -11,6 +11,6 @@ export default function InputElement({ value, type, placeholder, appearance, set
     return (
         <input value={value} onChange={(e) => {
             setter && setter(e.target.value)
-        }} type={type} className={`rounded-full border border-slate-300 pl-6 w-full text-gray-500  outline-0  h-11 ${appearance}`} placeholder={placeholder} />
+        }} type={type} className={`rounded-full border border-slate-300 pl-6 w-full text-gray-600/60  outline-0  h-11 ${appearance}`} placeholder={placeholder} />
     )
 }
