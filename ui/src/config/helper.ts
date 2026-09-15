@@ -1,1 +1,1 @@
-export const SITE_NAME = "http://localhost:8000"
+export const SITE_NAME = "https://gem-olqb.onrender.com";
