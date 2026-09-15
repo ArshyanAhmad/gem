@@ -10,13 +10,7 @@ The project is built with React and TypeScript on the frontend and Express + Mon
 
 ## 🚀 Live Demo
 
-**Frontend:**  
 https://paygem.vercel.app/
-
-**Backend:**  
-https://gem-olqb.onrender.com/
-
-> The backend root URL may show `Cannot GET /`. This is expected because the API does not define a route for `/`.
 
 ---
 
