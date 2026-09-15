@@ -1,13 +1,13 @@
 import { connectDB } from "./config/db";
 import { app } from "./app";
 
-const PORT = process.env.PORT! || 8080;
+const PORT = Number(process.env.PORT!) || 8080;
 
 connectDB().
     then(() => {
-        app.listen(PORT, () => {
-            console.log(`Server is listening on port at ${PORT}`);
-        })
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`Server running on port ${PORT}`);
+        });
     })
     .catch((err) => {
         console.log("Database connection error: ", err);
