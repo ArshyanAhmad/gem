@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
     try {
-        await mongoose.connect(`${process.env.MONGO_URI!}/paygem`);
+        await mongoose.connect(`${process.env.MONGO_URI!}`);
+
+        console.log("Database connected ");
+
 
         mongoose.connection.on("connected", () => {
             console.log("Mongoose is connected to the database");
